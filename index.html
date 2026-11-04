@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>رحلة الحروف العربية</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Tahoma, Arial, sans-serif;
+    background: linear-gradient(135deg,#142d50,#263e69,#172b48);
+    color: white;
+    text-align: center;
+}
+
+header {
+    padding: 18px 10px;
+}
+
+header h1 {
+    margin: 5px;
+    font-size: 28px;
+    color: #ffe58a;
+}
+
+header p {
+    color: #d9e9ff;
+}
+
+.classroom {
+    max-width: 950px;
+    margin: auto;
+    padding: 15px;
+}
+
+.teacher {
+    font-size: 65px;
+    margin: 10px;
+    animation: float 2s infinite ease-in-out;
+}
+
+@keyframes float {
+    50% { transform: translateY(-8px); }
+}
+
+.board {
+    position: relative;
+    background: linear-gradient(145deg,#173e3b,#092d2a);
+    border: 12px solid #b77a3c;
+    border-radius: 18px;
+    min-height: 330px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 30px #0008;
+    overflow: hidden;
+}
+
+.board::before {
+    content: "";
+    position: absolute;
+    inset: 10px;
+    border: 1px solid #ffffff22;
+    border-radius: 8px;
+    pointer-events: none;
+}
+
+#letterSVG {
+    width: 90%;
+    height: 270px;
+    overflow: visible;
+}
+
+#letterPath {
+    font-family: "Noto Naskh Arabic", "Amiri", Tahoma, serif;
+    font-size: 175px;
+    font-weight: bold;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    fill: transparent;
+    stroke: #fff;
+    stroke-width: 2;
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+    transition: fill 0.5s;
+}
+
+#letterPath.writing {
+    animation: writeLetter 2s ease forwards;
+}
+
+#letterPath.finished {
+    fill: #ffe66d;
+    stroke: #ffe66d;
+    stroke-dashoffset: 0;
+    filter: drop-shadow(0 0 12px #ffe66d);
+}
+
+@keyframes writeLetter {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.pen {
+    position: absolute;
+    font-size: 35px;
+    top: 55%;
+    right: 20%;
+    transform: translateY(-50%);
+    animation: movePen 2s ease forwards;
+    display: none;
+    z-index: 2;
+}
+
+.pen.active {
+    display: block;
+}
+
+@keyframes movePen {
+    from {
+        right: 20%;
+        top: 65%;
+    }
+    to {
+        right: 72%;
+        top: 35%;
+    }
+}
+
+.information {
+    margin: 20px auto;
+    background: #ffffff16;
+    border-radius: 15px;
+    padding: 15px;
+    max-width: 500px;
+}
+
+#letterName {
+    font-size: 25px;
+    color: #ffe58a;
+    margin: 5px;
+}
+
+#letterNumber {
+    font-size: 16px;
+    color: #d6e8ff;
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+button {
+    border: none;
+    border-radius: 12px;
+    padding: 13px 20px;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: .2s;
+}
+
+button:active {
+    transform: scale(.95);
+}
+
+.start {
+    background: #28c76f;
+    color: white;
+}
+
+.pause {
+    background: #ffb52e;
+    color: #222;
+}
+
+.restart {
+    background: #3498db;
+    color: white;
+}
+
+.next {
+    background: #9b59b6;
+    color: white;
+}
+
+.progress-container {
+    max-width: 500px;
+    height: 10px;
+    background: #ffffff30;
+    border-radius: 20px;
+    margin: 20px auto;
+    overflow: hidden;
+}
+
+#progress {
+    width: 0%;
+    height: 100%;
+    background: #ffe66d;
+    transition: width .4s;
+}
+
+footer {
+    padding: 20px;
+    color: #bdcde2;
+    font-size: 13px;
+}
+
+@media(max-width:600px) {
+    header h1 {
+        font-size: 22px;
+    }
+
+    .board {
+        min-height: 270px;
+        border-width: 8px;
+    }
+
+    #letterSVG {
+        height: 220px;
+    }
+
+    #letterPath {
+        font-size: 145px;
+    }
+
+    button {
+        font-size: 15px;
+        padding: 12px 15px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>🌟 رحلة الحروف العربية 🌟</h1>
+    <p>هيا نتعلم الحروف بطريقة ممتعة!</p>
+</header>
+
+<main class="classroom">
+
+    <div class="teacher">👨‍🏫</div>
+
+    <div class="board">
+
+        <svg id="letterSVG" viewBox="0 0 400 270">
+            <text id="letterPath" x="200" y="135">أ</text>
+        </svg>
+
+        <div class="pen" id="pen">✏️</div>
+
+    </div>
+
+    <div class="information">
+
+        <div id="letterName">استعد للتعلم!</div>
+
+        <div id="letterNumber">الحرف 0 من 28</div>
+
+    </div>
+
+    <div class="progress-container">
+        <div id="progress"></div>
+    </div>
+
+    <div class="controls">
+
+        <button class="start" onclick="startLesson()">
+            ▶ ابدأ
+        </button>
+
+        <button class="pause" onclick="pauseLesson()">
+            ⏸ إيقاف مؤقت
+        </button>
+
+        <button class="restart" onclick="restartLesson()">
+            🔄 إعادة
+        </button>
+
+        <button class="next" onclick="nextLetter()">
+            التالي ⏭
+        </button>
+
+    </div>
+
+</main>
+
+<footer>
+    تطبيق تعليمي للأطفال ❤️
+    <br>
+    تعلم الحروف العربية خطوة بخطوة
+</footer>
+
+<script>
+
+const letters = [
+    {letter:"أ", name:"ألف", audio:"ألف.mp3"},
+    {letter:"ب", name:"باء", audio:"باء.mp3"},
+    {letter:"ت", name:"تاء", audio:"تاء.mp3"},
+    {letter:"ث", name:"ثاء", audio:"ثاء.mp3"},
+    {letter:"ج", name:"جيم", audio:"جيم.mp3"},
+    {letter:"ح", name:"حاء", audio:"حاء.mp3"},
+    {letter:"خ", name:"خاء", audio:"خاء.mp3"},
+    {letter:"د", name:"دال", audio:"دال.mp3"},
+    {letter:"ذ", name:"ذال", audio:"ذال.mp3"},
+    {letter:"ر", name:"راء", audio:"راء.mp3"},
+    {letter:"ز", name:"زاي", audio:"زاي.mp3"},
+    {letter:"س", name:"سين", audio:"سين.mp3"},
+    {letter:"ش", name:"شين", audio:"شين.mp3"},
+    {letter:"ص", name:"صاد", audio:"صاد.mp3"},
+    {letter:"ض", name:"ضاد", audio:"ضاد.mp3"},
+    {letter:"ط", name:"طاء", audio:"طاء.mp3"},
+    {letter:"ظ", name:"ظاء", audio:"ظاء.mp3"},
+    {letter:"ع", name:"عين", audio:"عين.mp3"},
+    {letter:"غ", name:"غين", audio:"غين.mp3"},
+    {letter:"ف", name:"فاء", audio:"فاء.mp3"},
+    {letter:"ق", name:"قاف", audio:"قاف.mp3"},
+    {letter:"ك", name:"كاف", audio:"كاف.mp3"},
+    {letter:"ل", name:"لام", audio:"لام.mp3"},
+    {letter:"م", name:"ميم", audio:"ميم.mp3"},
+    {letter:"ن", name:"نون", audio:"نون.mp3"},
+    {letter:"هـ", name:"هاء", audio:"هاء.mp3"},
+    {letter:"و", name:"واو", audio:"واو.mp3"},
+    {letter:"ي", name:"ياء", audio:"ياء.mp3"}
+];
+
+let current = 0;
+let playing = false;
+let timer = null;
+let audio = new Audio();
+
+const letterPath = document.getElementById("letterPath");
+const letterName = document.getElementById("letterName");
+const letterNumber = document.getElementById("letterNumber");
+const progress = document.getElementById("progress");
+const pen = document.getElementById("pen");
+
+function stopAudio() {
+    audio.pause();
+    audio.currentTime = 0;
+
+    if ("speechSynthesis" in window) {
+        speechSynthesis.cancel();
+    }
+}
+
+function showLetter() {
+
+    clearTimeout(timer);
+    stopAudio();
+
+    const item = letters[current];
+
+    letterPath.classList.remove("writing","finished");
+
+    letterPath.style.animation = "none";
+
+    void letterPath.offsetWidth;
+
+    letterPath.textContent = item.letter;
+
+    letterName.textContent = item.name;
+
+    letterNumber.textContent =
+        "الحرف " + (current + 1) + " من 28";
+
+    progress.style.width =
+        ((current + 1) / letters.length * 100) + "%";
+
+    pen.classList.remove("active");
+
+    if (!playing) return;
+
+    setTimeout(() => {
+
+        letterPath.classList.add("writing");
+        pen.classList.add("active");
+
+    }, 100);
+
+    timer = setTimeout(() => {
+
+        letterPath.classList.remove("writing");
+
+        letterPath.classList.add("finished");
+
+        pen.classList.remove("active");
+
+        playLetterSound(item);
+
+    }, 2200);
+
+}
+
+function playLetterSound(item) {
+
+    if (!playing) return;
+
+    audio = new Audio(
+        "audio/" + encodeURIComponent(item.audio)
+    );
+
+    audio.onended = function() {
+        if (playing) {
+            timer = setTimeout(nextLetter, 1200);
+        }
+    };
+
+    audio.onerror = function() {
+
+        if ("speechSynthesis" in window) {
+
+            const speech = new SpeechSynthesisUtterance(
+                item.name
+            );
+
+            speech.lang = "ar-SA";
+            speech.rate = 0.75;
+
+            speech.onend = function() {
+                if (playing) {
+                    timer = setTimeout(nextLetter, 1200);
+                }
+            };
+
+            speechSynthesis.speak(speech);
+
+        } else if (playing) {
+            timer = setTimeout(nextLetter, 1800);
+        }
+
+    };
+
+    audio.play().catch(() => {
+
+        if ("speechSynthesis" in window) {
+
+            const speech = new SpeechSynthesisUtterance(
+                item.name
+            );
+
+            speech.lang = "ar-SA";
+
+            speech.onend = function() {
+                if (playing) {
+                    timer = setTimeout(nextLetter, 1200);
+                }
+            };
+
+            speechSynthesis.speak(speech);
+
+        } else if (playing) {
+            timer = setTimeout(nextLetter, 1800);
+        }
+
+    });
+
+}
+
+function startLesson() {
+
+    if (playing) return;
+
+    playing = true;
+
+    showLetter();
+
+}
+
+function pauseLesson() {
+
+    playing = false;
+
+    clearTimeout(timer);
+
+    stopAudio();
+
+    pen.classList.remove("active");
+
+}
+
+function nextLetter() {
+
+    clearTimeout(timer);
+    stopAudio();
+
+    current++;
+
+    if (current >= letters.length) {
+
+        current = 0;
+
+        playing = false;
+
+        letterPath.classList.remove("writing");
+        letterPath.classList.add("finished");
+
+        letterName.textContent =
+            "🎉 أحسنت! أكملت جميع الحروف!";
+
+        letterNumber.textContent =
+            "انتهت الرحلة التعليمية";
+
+        progress.style.width = "100%";
+
+        return;
+    }
+
+    showLetter();
+
+}
+
+function restartLesson() {
+
+    pauseLesson();
+
+    current = 0;
+
+    startLesson();
+
+}
+
+showLetter();
+
+</script>
+
+</body>
+</html>
